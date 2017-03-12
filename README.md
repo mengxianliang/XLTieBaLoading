@@ -1,9 +1,6 @@
 # XLTieBaLoading
 ### 显示效果如下
 <img src="https://github.com/mengxianliang/XLTieBaLoading/blob/master/Image/1.gif" width=370 height=295 />
-![image](https://is1-ssl.mzstatic.com/image/thumb/Purple62/v4/fe/78/0e/fe780eb8-4a22-5108-2687-a6eb6962aad6/pr_source.png/300x300bb.jpg?1489281369086)
-![image](https://is1-ssl.mzstatic.com/image/thumb/Purple71/v4/02/6f/de/026fdea7-232f-76c5-d0de-60729bcb6981/pr_source.png/300x300bb.jpg?1489281369088)
-![image](https://is1-ssl.mzstatic.com/image/thumb/Purple22/v4/fc/fb/6e/fcfb6ebe-65fa-41d9-4166-75e7d1e6d03f/pr_source.png/300x300bb.jpg?1489281369089)
 ### 实现原理
 实现原理就是添加了三个ImageView,如图所示:
 <br>
