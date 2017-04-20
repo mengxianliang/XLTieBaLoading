@@ -10,4 +10,18 @@
 
 @interface XLTieBarLoading : UIView
 
+-(void)show;
+
+-(void)hide;
+
+/**
+ * 显示方法
+ */
++(void)showInView:(UIView*)view;
+
+/**
+ * 隐藏方法
+ */
++(void)hideInView:(UIView*)view;
+
 @end

@@ -37,6 +37,9 @@
     
     //前面正常显示的图片 蓝底白字
     UIImageView *_imageView2;
+    
+    //动画的容器
+    UIView *_container;
 }
 @end
 
@@ -54,27 +57,35 @@
 -(void)buildUI
 {
     //画了个圆
-    self.layer.cornerRadius = self.bounds.size.width/2.0f;
-    self.layer.masksToBounds = true;
+    _container = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
+    _container.center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
+    _container.layer.cornerRadius = _container.bounds.size.width/2.0f;
+    _container.layer.masksToBounds = true;
+    [self addSubview:_container];
+    
+    
     
     //底部图片白底蓝字
-    UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    UIImageView *imageView = [[UIImageView alloc] initWithFrame:_container.bounds];
     imageView.image = [UIImage imageNamed:@"1"];
-    [self addSubview:imageView];
+    [_container addSubview:imageView];
     
     //上层图片蓝底白字
-    _imageView1 = [[UIImageView alloc] initWithFrame:self.bounds];
+    _imageView1 = [[UIImageView alloc] initWithFrame:_container.bounds];
     _imageView1.image = [UIImage imageNamed:@"2"];
     _imageView1.backgroundColor = [UIColor colorWithRed:51/255.0f green:170/255.0f blue:255/255.0f alpha:1];
-    [self addSubview:_imageView1];
+    [_container addSubview:_imageView1];
+    
     UIView *view = [[UIView alloc] initWithFrame:_imageView1.bounds];
     view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.3];
     [_imageView1 addSubview:view];
     
-    _imageView2 = [[UIImageView alloc] initWithFrame:self.bounds];
+    
+    //下层图片白底蓝字
+    _imageView2 = [[UIImageView alloc] initWithFrame:_container.bounds];
     _imageView2.image = [UIImage imageNamed:@"2"];
     _imageView2.backgroundColor = [UIColor colorWithRed:51/255.0f green:170/255.0f blue:255/255.0f alpha:1];
-    [self addSubview:_imageView2];
+    [_container addSubview:_imageView2];
 }
 
 //初始化数据
@@ -85,21 +96,17 @@
     //角速度
     _wavePalstance = 0.12;
     //偏距
-    _waveY = self.bounds.size.height;
+    _waveY = _container.bounds.size.height;
     //初相
     _waveX = 0;
     //x轴移动速度
-#if TARGET_IPHONE_SIMULATOR
-    _waveMoveSpeed = 0.3;
-#elif TARGET_OS_IPHONE
     _waveMoveSpeed = 0.15;
-#endif
-    
-    _waveY = self.bounds.size.height/2.0f;
-    
+    //y轴偏移量
+    _waveY = _container.bounds.size.height/2.0f;
     //以屏幕刷新速度为周期刷新曲线的位置
     _disPlayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(updateWave)];
     [_disPlayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+    _disPlayLink.paused = true;
 }
 
 -(void)updateWave
@@ -112,7 +119,7 @@
 -(void)updateWave1
 {
     //波浪宽度
-    CGFloat waterWaveWidth = self.bounds.size.width;
+    CGFloat waterWaveWidth = _container.bounds.size.width;
     //初始化运动路径
     CGMutablePathRef path = CGPathCreateMutable();
     //设置起始位置
@@ -125,8 +132,8 @@
         CGPathAddLineToPoint(path, nil, x, y);
     }
     //填充底部颜色
-    CGPathAddLineToPoint(path, nil, waterWaveWidth, self.bounds.size.height);
-    CGPathAddLineToPoint(path, nil, 0, self.bounds.size.height);
+    CGPathAddLineToPoint(path, nil, waterWaveWidth, _container.bounds.size.height);
+    CGPathAddLineToPoint(path, nil, 0, _container.bounds.size.height);
     CGPathCloseSubpath(path);
     CAShapeLayer *layer = [CAShapeLayer layer];
     layer.path = path;
@@ -137,7 +144,7 @@
 -(void)updateWave2
 {
     //波浪宽度
-    CGFloat waterWaveWidth = self.bounds.size.width;
+    CGFloat waterWaveWidth = _container.bounds.size.width;
     //初始化运动路径
     CGMutablePathRef path = CGPathCreateMutable();
     //设置起始位置
@@ -150,13 +157,40 @@
         CGPathAddLineToPoint(path, nil, x, y);
     }
     //添加终点路径、填充底部颜色
-    CGPathAddLineToPoint(path, nil, waterWaveWidth, self.bounds.size.height);
-    CGPathAddLineToPoint(path, nil, 0, self.bounds.size.height);
+    CGPathAddLineToPoint(path, nil, waterWaveWidth, _container.bounds.size.height);
+    CGPathAddLineToPoint(path, nil, 0, _container.bounds.size.height);
     CGPathCloseSubpath(path);
     CAShapeLayer *layer = [CAShapeLayer layer];
     layer.path = path;
     _imageView2.layer.mask = layer;
     CGPathRelease(path);
+}
+
+#pragma mark -
+#pragma mark 显示/隐藏方法
+
+-(void)show{
+    _disPlayLink.paused = false;
+}
+
+-(void)hide{
+    _disPlayLink.paused = true;
+}
+
++(void)showInView:(UIView *)view{
+    
+    XLTieBarLoading *loading = [[XLTieBarLoading alloc] initWithFrame:view.bounds];
+    [view addSubview:loading];
+    [loading show];
+}
+
++(void)hideInView:(UIView *)view{
+    for (XLTieBarLoading *loading in view.subviews) {
+        if ([loading isKindOfClass:[XLTieBarLoading class]]) {
+            [loading hide];
+            [loading removeFromSuperview];
+        }
+    }
 }
 
 -(void)dealloc

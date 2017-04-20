@@ -18,9 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    XLTieBarLoading *loading = [[XLTieBarLoading alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];
-    loading.center = self.view.center;
-    [self.view addSubview:loading];
+    [XLTieBarLoading showInView:self.view];
+    
 }
 
 
