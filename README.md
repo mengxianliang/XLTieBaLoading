@@ -24,4 +24,4 @@
 [XLTieBarLoading hideInView:self.view];
 ```
 
-### 浪效果的实现原理请参考:[我的博文](http://blog.csdn.net/u013282507/article/details/53121556)
+### 波浪效果的实现原理请参考:[我的博文](http://blog.csdn.net/u013282507/article/details/53121556)
